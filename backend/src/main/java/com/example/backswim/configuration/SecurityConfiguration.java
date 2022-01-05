@@ -31,11 +31,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
 
         //보안사항 제외할 페이지 설정
-        http.authorizeRequests().antMatchers("/admin/makedatabaseset","/api/pool/getpoolmapforlocate").permitAll();
+        http.authorizeRequests().antMatchers("/api/pool/getpoolmapforlocate").permitAll();
 
         //http.formLogin()
         //        .loginPage("")
         //        .permitAll();
+        http.authorizeRequests().antMatchers().permitAll();
+
+        http.formLogin()
+                .loginPage("")
+                .permitAll();
 
         //로그아웃 관련 부분 설정
         http.logout()
@@ -50,6 +55,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception{
         //auth.userDetailsService(null)
         //        .passwordEncoder(getPasswordEncoder());
+
 
         super.configure(auth);
     }
