@@ -20,3 +20,5 @@ git config commit.template ./commit-template/feature-template
 chmod +x frontend/git_hooks/copy_git_hooks.sh
 frontend/git_hooks/copy_git_hooks.sh
 ```
+
+git hook test
