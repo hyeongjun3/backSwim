@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './sideBarText.css';
 import MyRequest from 'Common/myRequest';
 import debounce from 'Utils/debounce';
@@ -74,6 +75,25 @@ export default class SideBarText extends Component {
     });
   }
 
+  /**
+   *
+   * 전달받은 Idx에 맞는 수영장 결과로 home state 업데이트
+   * @param {number} idx
+   * @memberof SideBarText
+   */
+  selectPool(idx) {
+    const nxtPool = this.state.searchResult[idx];
+    this.props.setCurPool(nxtPool);
+  }
+
+  /**
+   *
+   * search 결과에서 방향키 또는 엔터 handler
+   * 위, 아래 방향키로는 검색 결과 탐색, 엔터는 검색 결과 표시
+   * @param {Evemt} event
+   * @return {void}
+   * @memberof SideBarText
+   */
   handlerKeyDown(event) {
     /* arrow up(38) and down(40) */
     if (event.keyCode === 40 || event.keyCode === 38) {
@@ -88,7 +108,23 @@ export default class SideBarText extends Component {
       );
 
       this.focusItem(searchListEl, this.selectedItemIdx);
+    } else if (event.keyCode === 13) {
+      /* enter(13) */
+      this.selectPool(this.selectedItemIdx);
     }
+  }
+
+  /**
+   *
+   * 추천 검색 리스트를 클릭 했을 때의 handler
+   * @param {Event} event
+   * @memberof SideBarText
+   */
+  handlerSearchListClick(event) {
+    const parent = event.currentTarget;
+    const child = event.target;
+    this.selectedItemIdx = Array.from(parent.children).indexOf(child);
+    this.selectPool(this.selectedItemIdx);
   }
 
   /**
@@ -104,7 +140,7 @@ export default class SideBarText extends Component {
     }
 
     return (
-      <div className="side-bar-search-list" onClick={(e) => this.handlerSearchListKeyDown(e)}>
+      <div className="side-bar-search-list" onClick={(e) => this.handlerSearchListClick(e)}>
         {searchResult.map((value, idx) => (
           <div className="side-bar-serach-item" key={idx}>
             {value.placeName}
@@ -134,3 +170,7 @@ export default class SideBarText extends Component {
     );
   }
 }
+
+SideBarText.propTypes = {
+  setCurPool: PropTypes.func.isRequired,
+};
