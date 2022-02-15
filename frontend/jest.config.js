@@ -5,7 +5,6 @@ module.exports = {
     '#common/(.*)$': '<rootDir>/src/common/$1',
     '#utils/(.*)$': '<rootDir>/src/utils/$1',
   },
-  preset: "jest-puppeteer",
   // 각각의 테스트 파일을 실행하기 전에 configure 또는 setup 하는 module의 path
-  setupFilesAfterEnv: ["./src/setupTests.js", "expect-puppeteer"]
+  setupFilesAfterEnv: ['./src/setupTests.js'],
 };
