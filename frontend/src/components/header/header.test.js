@@ -9,7 +9,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Header from './header.js';
 
 describe('[Pool] BAC-29 헤더 컴포넌트', () => {
-  describe('비로그인', () => {
+  describe('비로그인 경우', () => {
     beforeEach(() => {
       render(
         <BrowserRouter>
@@ -25,7 +25,7 @@ describe('[Pool] BAC-29 헤더 컴포넌트', () => {
     })
   });
 
-  describe('비로그인 버튼 렌더링', () => {
+  describe('로그인 경우', () => {
     beforeEach(() => {
       render(
         <BrowserRouter>
@@ -33,7 +33,7 @@ describe('[Pool] BAC-29 헤더 컴포넌트', () => {
         </BrowserRouter>
       );
     });
-    test('마이 페이지 버튼 유무', () => {
+    test('마이 페이지 버튼 렌더링', () => {
       expect(screen.getByText(/My Page/)).toBeInTheDocument();
     });
   });
