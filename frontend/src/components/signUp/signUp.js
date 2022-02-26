@@ -2,6 +2,7 @@ import React from 'react';
 import './signUp.css';
 import debounce from '#utils/debounce';
 import { emailValidation, passwordValidation } from '#utils/validation';
+import MyRequest from '#common/myRequest';
 
 /* TODO: ref와 state의 차이 */
 class SignUp extends React.Component {
@@ -21,7 +22,7 @@ class SignUp extends React.Component {
    * form 필드(id,password,password2)의 수정에 대한 핸들러
    * 유효한지 확인하고 errMsg 수정
    * @param {event} e
-   * @return {void} 
+   * @return {void}
    * @memberof SignUp
    */
   handlerChangeItem(e) {
@@ -45,12 +46,20 @@ class SignUp extends React.Component {
     }
   }
 
-  /* TODO: implement request to server logic */
+  /* TODO: Modal Window 필요 */
+  /* TODO: 라우팅 필요*/
   submitHandler(e) {
     e.preventDefault();
 
-    if(this.formValid === false) return;
-    console.log('TODO');
+    if (this.formValid === false) return;
+
+    MyRequest.signUp(this.email, this.password)
+      .then((value) => {
+        console.log(value);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   renderAlert() {
