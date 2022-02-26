@@ -58,11 +58,21 @@ const MyRequest = (() => {
     return requestToServer(url, option);
   }
 
+  function signUp(userEmail, password) {
+    const data = { userEmail, password };
+    const url = host + '/joinmember/addmember'
+    const option = { ...defaultOption };
+    option.method = 'POST';
+    option.body = JSON.stringify(data);
+    return requestToServer(url, option);
+  }
+
   return {
     getPoolsByGeoLocation: getPoolsByGeoLocation,
     getPoolsByName: getPoolsByName,
     getPoolDetailById: getPoolDetailById,
     getPoolListByLocation: getPoolListByLocation,
+    signUp: signUp,
   };
 })();
 
