@@ -2,10 +2,10 @@ package com.example.backswim.member.service;
 
 import com.example.backswim.component.JwtComponent;
 import com.example.backswim.component.MailComponents;
-import com.example.backswim.configuration.UserSecurityAdapter;
 import com.example.backswim.member.entity.EmailEntity;
 import com.example.backswim.member.entity.UserEntity;
-import com.example.backswim.member.exception.MemberNotEmailAuthException;
+import com.example.backswim.member.exception.UserNotEmailAuthException;
+import com.example.backswim.member.exception.WrongPasswordException;
 import com.example.backswim.member.params.ChangePasswordParam;
 import com.example.backswim.member.params.CheckDuplicateID;
 import com.example.backswim.member.params.JoinMemberParam;
@@ -14,18 +14,12 @@ import com.example.backswim.member.params.login.LoginRequestParam;
 import com.example.backswim.member.repository.EmailRepository;
 import com.example.backswim.member.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -102,9 +96,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public boolean emailAuth(String uuid) {
-        Optional<UserEntity> optionalUser = userRepository.findByEmailAuthKey(uuid);
-
+    public boolean emailAuth(String emailAuthKey) {
+        Optional<UserEntity> optionalUser = userRepository.findByEmailAuthKey(emailAuthKey);
         if(optionalUser.isEmpty()){
             return false;
         }
@@ -119,6 +112,11 @@ public class UserServiceImpl implements UserService{
         return true;
     }
 
+    /**
+     * 패스워드 초기화 이메일 전송
+     * @param param
+     * @return
+     */
     @Override
     public boolean sendResetPassword(ResetPasswordParam param) {
         Optional<UserEntity> optionalUser = userRepository.findByUserEmail(param.getUserEmail());
@@ -141,7 +139,7 @@ public class UserServiceImpl implements UserService{
                 .userEmail(userEntity.getUserEmail())
                 .userId(userEntity.getSeq())
                 .EmailContent("<p>"+" BackSwim 사이트 비밀번호 초기화 이메일입니다. </p>\n<p>아래 링크를 클릭하셔서 비밀번호를 변경해주세요</p>\n"
-                        + "<div><a target='_blank' href='http://localhost:8080/api/joinmember/resetpassword?uuid="+uuid+"'>비밀번호 변경</a></div>").build();
+                        + "<div><a target='_blank' href='http://localhost:3000/resetpassword?uuid="+uuid+"'>비밀번호 변경</a></div>").build();
 
         emailEntity = emailRepository.save(emailEntity);
 
@@ -178,17 +176,24 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public String userLogin(LoginRequestParam param) {
+    public String userLogin(LoginRequestParam param) throws UserNotEmailAuthException, WrongPasswordException {
         Optional<UserEntity> optionalUser = userRepository.findByUserEmail(param.getUserEmail());
         if(optionalUser.isEmpty()){
             return null;
         }
         UserEntity userEntity = optionalUser.get();
 
+        if(!userEntity.isEmailAuthYn()){
+            throw new UserNotEmailAuthException("GET EMAIL AUTH FIRST");
+        }
+
+
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         if(!passwordEncoder.matches(param.getPassword(),userEntity.getPassword())){
-            return null;
+            throw new WrongPasswordException("WRONG PASSWORD");
         }
+
+        // 다음 스프린트 진행에 로그인 history 작성하는 부분 추가하도록 고려
 
         getAuthentication(param.getUserEmail(),param.getPassword());
 

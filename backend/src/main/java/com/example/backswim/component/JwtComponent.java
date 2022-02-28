@@ -84,6 +84,15 @@ public class JwtComponent {
         return new UsernamePasswordAuthenticationToken(userDetails,"",userDetails.getAuthorities());
     }
 
+    /**
+     * 테스트 코드만을 위한 코드
+     * @param token
+     * @return
+     */
+    public String getUserName(String token){
+        return (String)Jwts.parser().setSigningKey(securityKey).parseClaimsJws(token).getBody().get("username");
+    }
+
     public String resolveToken(HttpServletRequest request){
         return request.getHeader("X-AUTH-TOKEN");
     }

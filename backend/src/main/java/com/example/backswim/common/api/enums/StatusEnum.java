@@ -12,7 +12,10 @@ public enum StatusEnum {
     BAD_REQUEST("BAD_REQEUST"),
     PARAMETER_TYPE_ERROR("PARAMETER_TYPE_ERROR"),
     OK("OK"),
-    TIME_OUT("TIME_OUT");
+    TIME_OUT("TIME_OUT"),
+    ALREADY_AUTH("ALREADY_AUTH"),
+    AUTH_FIRST("EMAIL_AUTH_FIRST"),
+    WRONG_PASSWORD("WRONG_PASSWORD");
 
 
     private final String message;
