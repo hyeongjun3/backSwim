@@ -5,6 +5,7 @@ import com.example.backswim.member.params.ChangePasswordParam;
 import com.example.backswim.member.params.CheckDuplicateID;
 import com.example.backswim.member.params.JoinMemberParam;
 import com.example.backswim.member.params.ResetPasswordParam;
+import com.example.backswim.member.params.UserEmailParam;
 import com.example.backswim.member.params.login.LoginRequestParam;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -23,4 +24,10 @@ public interface UserService{
     boolean changePassword(ChangePasswordParam param) throws TimeoutException;
 
     String userLogin(LoginRequestParam param);
+
+    boolean resendEmaiAuthEmail(UserEmailParam uuid);
+
+    boolean resendRestPasswordEmail(String uuid);
+
+    boolean deleteUser(UserEmailParam param);
 }
