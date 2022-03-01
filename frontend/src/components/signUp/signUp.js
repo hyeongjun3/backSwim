@@ -1,8 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './signUp.css';
 import debounce from '#utils/debounce';
 import { emailValidation, passwordValidation } from '#utils/validation';
 import MyRequest from '#common/myRequest';
+import { withNavigate } from '#utils/withRouter';
+import AlertModal from '#components/modal/alertModa';
+import { SignUpError } from '#common/myError';
 
 /* TODO: ref와 state의 차이 */
 class SignUp extends React.Component {
@@ -11,10 +15,20 @@ class SignUp extends React.Component {
     this.state = {
       errMsg: null,
       formValid: false,
+      modal: {
+        isOpen: false,
+        content: '',
+      },
     };
     this.email = '';
     this.password = '';
     this.password2 = '';
+  }
+
+  setModalOpenFalse() {
+    this.setState({
+      modal: { ...this.state.modal, isOpen: false },
+    });
   }
 
   /**
@@ -47,7 +61,6 @@ class SignUp extends React.Component {
   }
 
   /* TODO: Modal Window 필요 */
-  /* TODO: 라우팅 필요*/
   submitHandler(e) {
     e.preventDefault();
 
@@ -55,10 +68,23 @@ class SignUp extends React.Component {
 
     MyRequest.signUp(this.email, this.password)
       .then((value) => {
-        console.log(value);
+        if (value.data === false) {
+          throw new SignUpError('중복된 이메일 입니다');
+        } else if (value.data === null) {
+          throw new SignUpError('이메일 또는 패스워드를 확인해주세요');
+        }
+        this.props.navigate('/emailSent', {
+          state: { email: this.email, password: this.password },
+        });
       })
       .catch((err) => {
-        console.log(err);
+        if (err instanceof SignUpError) {
+          this.setState({
+            modal: { isOpen: true, content: err.message },
+          });
+        } else {
+          console.error(err);
+        }
       });
   }
 
@@ -70,9 +96,23 @@ class SignUp extends React.Component {
     return <span className="sign-up-item sign-up-item-alert">{errMsg}</span>;
   }
 
+  renderAlertModal() {
+    const modal = this.state.modal;
+    if (modal.isOpen === false) return;
+
+    return (
+      <AlertModal
+        isOpen={modal.isOpen}
+        content={modal.content}
+        closeHandler={this.setModalOpenFalse.bind(this)}
+      ></AlertModal>
+    );
+  }
+
   // prettier-ignore
   render() {
     return (
+      <>
       <form onSubmit={(e) => this.submitHandler(e)}>
         <div
           className="sign-up-container"
@@ -94,8 +134,15 @@ class SignUp extends React.Component {
           <button type="submit" className="sign-up-item sign-up-item-btn" disabled={!this.state.formValid}>회원가입</button>
         </div>
       </form>
+      {this.renderAlertModal()}
+      </>
+
     );
   }
 }
 
-export default SignUp;
+SignUp.propTypes = {
+  navigate: PropTypes.func.isRequired,
+};
+
+export default withNavigate(SignUp);

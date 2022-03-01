@@ -5,6 +5,7 @@
   --sky-color: #87cefa;
   --half-sky-color: rgb(135, 206, 250, 0.8);
   --red-color: #ff0000;
+  --opacity-black-color: rgba(0, 0, 0, 0.2);
 
   /* size */
   --default-font-size: 12px;
@@ -12,6 +13,7 @@
 
   /* border */
   --default-border: 1px solid var(--sky-color);
+  --thick-border: 2px solid var(--sky-color);
 
   /* For Test */
   /* --border-test: 1px solid black; */
