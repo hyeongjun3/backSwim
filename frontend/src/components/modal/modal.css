@@ -18,7 +18,7 @@
 }
 
 .modal-window {
-  background-color: rgb(255, 255, 255, 0.4);
+  background-color: rgb(255, 255, 255, 0.8);
   border-radius: 10px;
   border: var(--thick-border);
   max-width: var(--alert-modal-max-size);
@@ -28,7 +28,7 @@
   flex-direction: column;
   justify-content: space-around;
   padding: 5px;
-  overflow: scroll;
+  overflow-y: hidden;
 }
 
 .modal-content {

@@ -1,21 +1,20 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-export const withNavigate = (Component) => {
+/* TODO: 왜 이렇게 귀찮게 함?? */
+function useQuery() {
+  const { search } = useLocation();
+
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
+
+export const withRouterHook = (Component) => {
   const Wrapper = (props) => {
+    const query = useQuery();
+    const { state } = useLocation();
     const navigate = useNavigate();
 
-    return <Component navigate={navigate} {...props} />;
-  };
-
-  return Wrapper;
-};
-
-export const withLocation = (Component) => {
-  const Wrapper = (props) => {
-    const { state } = useLocation();
-
-    return <Component locationState={state} {...props} />;
+    return <Component navigate={navigate} locationState={state} query={query} {...props} />;
   };
 
   return Wrapper;

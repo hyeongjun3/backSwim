@@ -4,7 +4,7 @@ import './signUp.css';
 import debounce from '#utils/debounce';
 import { emailValidation, passwordValidation } from '#utils/validation';
 import MyRequest from '#common/myRequest';
-import { withNavigate } from '#utils/withRouter';
+import { withRouterHook } from '#utils/withRouter';
 import AlertModal from '#components/modal/alertModa';
 import { SignUpError } from '#common/myError';
 
@@ -145,4 +145,4 @@ SignUp.propTypes = {
   navigate: PropTypes.func.isRequired,
 };
 
-export default withNavigate(SignUp);
+export default withRouterHook(SignUp);
