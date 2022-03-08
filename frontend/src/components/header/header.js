@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import './header.css';
 import { withRouterHook } from '#utils/withRouter';
 import { DropDown, DropDownItemNode } from '#components/dropDown/dropDown';
+import MyRequest from '#common/myRequest';
 
 function ItemNode(text, handler, id) {
   Object.assign(this, { text, handler, id });
@@ -75,10 +76,15 @@ class Header extends React.Component {
       console.log('handler show profile');
     }
 
+    /* TODO: 로그아웃 로직 확인 + 쿠키 삭제 */
     function handlerSignOut(e) {
       e.preventDefault();
 
-      console.log('hello');
+      MyRequest.signOut().then((value) => {
+        console.log(value);
+
+        this.props.navigate('/', { state: { isLogin: true } });
+      });
     }
 
     const items = [
