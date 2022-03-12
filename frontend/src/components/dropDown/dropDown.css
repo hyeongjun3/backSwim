@@ -1,0 +1,29 @@
+@import url(../../root.css);
+
+:root {
+  --drop-down-size: 130px;
+  --drop-down-padding: 10px;
+  --drop-down-item-gap: 10px;
+
+  --drop-down-item-padding: 5px;
+}
+
+.drop-down-container {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  width: var(--drop-down-size);
+  z-index: 2;
+  right: 0;
+  background-color: var(--white-color);
+  border-radius: 5px;
+  padding: var(--drop-down-padding);
+}
+
+.drop-down-container > *:not(:last-child) {
+  margin-bottom: var(--drop-down-item-gap);
+}
+
+.drop-down-item {
+  padding: var(--drop-down-padding);
+}

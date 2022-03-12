@@ -139,6 +139,12 @@ const MyRequest = (() => {
     return requestToServer(url, option);
   }
 
+  function signOut() {
+    const url = host + '/logout/logout'
+    const option = { ...defaultHeaders };
+    return requestToServer(url, option); 
+  }
+
   return {
     getPoolsByGeoLocation: getPoolsByGeoLocation,
     getPoolsByName: getPoolsByName,
@@ -150,6 +156,7 @@ const MyRequest = (() => {
     emailAuth: emailAuth,
     resetPassword: resetPassword,
     changePassword: changePassword,
+    signOut: signOut,
   };
 })();
 
